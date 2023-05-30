@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct SimpleWeatherApplicationApp: App {
+    
+    var apiConnection = APIConnection()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ForecastView().environmentObject(apiConnection)
         }
     }
 }
