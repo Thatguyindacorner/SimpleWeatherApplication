@@ -8,8 +8,8 @@
 import SwiftUI
 
 extension Double{
-    func asTemperature(unit: UnitTemperature) -> String{
-        return String(format: "%.1f", self) + unit.symbol
+    func asTemperature(unit: TemperatureUnit) -> String{
+        return String(format: "%.1f", self) + unit.symbol()
     }
     func asPercent() -> String{
         return String(format: "%.0f", self) + "%"
@@ -37,9 +37,34 @@ enum TimesOfDay: String{
     }
 }
 
+enum TemperatureUnit: String{
+    case C = "celsius"
+    case K = "fahrenheit"
+    
+    mutating func toggle(){
+        switch self{
+        case .C:
+            self = .K
+        case .K:
+            self = .C
+        }
+    }
+    
+    func symbol() -> String{
+        switch self{
+        case .C:
+            return UnitTemperature.celsius.symbol
+        case .K:
+            return UnitTemperature.fahrenheit.symbol
+        }
+    }
+}
+
 struct ForecastView: View {
     
     @State var cityOfForecast: String = "Toronto"
+    
+    @State var usingUnit: TemperatureUnit = .C
     
     @EnvironmentObject var api: APIConnection
     
@@ -109,7 +134,7 @@ struct ForecastView: View {
                     ScrollView{
                         if api.fiveDayForcast.datesOfWeatherForcast != nil{
                             ForEach(0..<5){index in
-                                WeatherCardView(fiveDayForecast: api.fiveDayForcast, dayIndex: index, darkestColor: cardColor)
+                                WeatherCardView(fiveDayForecast: api.fiveDayForcast, dayIndex: index, darkestColor: cardColor, unit: usingUnit)
                             }
                         }
                         else{
@@ -130,7 +155,7 @@ struct ForecastView: View {
                         Spacer()
                         //choosen city
                         Text(cityOfForecast).font(.largeTitle).bold().foregroundColor(Color.white).shadow(color: Color.black, radius: 5, x: 2, y: 2)
-                        Text("22").font(.custom("temp", size: 65)).foregroundColor(Color.white).shadow(color: Color.black, radius: 5, x: 2, y: 2)
+                        Text("\(api.fiveDayForcast.temperature?.asTemperature(unit: usingUnit) ?? "N/A")").font(.custom("temp", size: 65)).foregroundColor(Color.white).shadow(color: Color.black, radius: 5, x: 2, y: 2)
                     }.padding(.top, 70)
                     
                 }
@@ -140,6 +165,19 @@ struct ForecastView: View {
                         self.refreshAPI()
                     }){
                         Image(systemName: "arrow.clockwise")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    //choosen city
+                    Button(action:{
+                        usingUnit.toggle()
+                        self.refreshAPI()
+                    }){
+                        HStack{
+                            Text(UnitTemperature.celsius.symbol)
+                            Text("/")
+                            Text(UnitTemperature.fahrenheit.symbol)
+                        }
                     }
                 }
             }//.padding(.top, 5)
@@ -153,7 +191,7 @@ struct ForecastView: View {
     
     func refreshAPI(){
         Task{
-            await api.get5DayForcast()
+            await api.get5DayForcast(inDegree: usingUnit.rawValue)
             let hour: String = Date.now.formatted(.dateTime.hour())
             
             for partOfDay in TimesOfDay.all{

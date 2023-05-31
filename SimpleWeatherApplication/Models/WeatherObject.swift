@@ -9,12 +9,14 @@ import Foundation
 
 class WeatherObject: Codable{
     
+    var temperature: Double?
     var datesOfWeatherForcast: [String]?
     var highTemperatures: [Double]?
     var lowTemperatures: [Double]?
     var probabilitiesOfPercipitation: [Double]?
     
-    init(datesOfWeatherForcast: [String]? = nil, highTemperatures: [Double]? = nil, lowTemperatures: [Double]? = nil, probabilitiesOfPercipitation: [Double]? = nil) {
+    init(temperature: Double? = nil, datesOfWeatherForcast: [String]? = nil, highTemperatures: [Double]? = nil, lowTemperatures: [Double]? = nil, probabilitiesOfPercipitation: [Double]? = nil) {
+        self.temperature = temperature
         self.datesOfWeatherForcast = datesOfWeatherForcast
         self.highTemperatures = highTemperatures
         self.lowTemperatures = lowTemperatures
@@ -29,6 +31,14 @@ class WeatherObject: Codable{
         let dailyContainer = try container.nestedContainer(keyedBy: WeatherKeys.ParameterKeys.self, forKey: .daily)
         
         print("passed daily container")
+        
+        let currentContainer = try container.nestedContainer(keyedBy: WeatherKeys.CurrentTempKey.self, forKey: .current_weather)
+        
+        print("passed current container")
+        
+        self.temperature = try currentContainer.decodeIfPresent(Double.self, forKey: .temperature)
+        
+        print(self.temperature!)
         
         self.datesOfWeatherForcast = try dailyContainer.decodeIfPresent([String].self, forKey: .time)
         
@@ -58,6 +68,12 @@ class WeatherObject: Codable{
             case precipitation_probability_mean
             
         }
+        
+        case current_weather
+        
+        enum CurrentTempKey: CodingKey{
+                case temperature
+            }
     }
     
 }

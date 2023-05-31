@@ -42,6 +42,7 @@ struct WeatherCardView: View {
     var fiveDayForecast: WeatherObject
     var dayIndex: Int
     var darkestColor: Color
+    var unit: TemperatureUnit
 
     
     var body: some View {
@@ -55,13 +56,13 @@ struct WeatherCardView: View {
                     VStack{
                         Text(fiveDayForecast.datesOfWeatherForcast![dayIndex].convertToDayOfWeek()).font(.title2).bold()
                         Spacer()
-                        HStack(alignment: .center, spacing: 45){
+                        HStack(alignment: .center, spacing: 25){
                             //Spacer()
                             
                             VStack(alignment: .leading){
                                 
-                                Label("\(fiveDayForecast.highTemperatures![dayIndex].asTemperature(unit: UnitTemperature.celsius))", systemImage: "thermometer.sun")
-                                Label("\(fiveDayForecast.lowTemperatures![dayIndex].asTemperature(unit: UnitTemperature.celsius))", systemImage: "thermometer.snowflake")
+                                Label("\(fiveDayForecast.highTemperatures![dayIndex].asTemperature(unit: unit))", systemImage: "thermometer.sun")
+                                Label("\(fiveDayForecast.lowTemperatures![dayIndex].asTemperature(unit: unit))", systemImage: "thermometer.snowflake")
                                 
                             }
                             //Spacer()

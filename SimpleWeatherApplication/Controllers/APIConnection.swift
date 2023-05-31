@@ -19,10 +19,13 @@ class APIConnection: ObservableObject{
     //required parameters
     var parameters: String = "&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_mean"
     
+    var getCurrentWeather = "&current_weather=true"
+    var tempUnit = "&temperature_unit="
+    
     //each call will refresh
-    func get5DayForcast() async {
+    func get5DayForcast(inDegree: String) async {
         
-        guard let api = URL(string: "\(baseURL)\(latlng)\(timezone)\(parameters)")
+        guard let api = URL(string: "\(baseURL)\(latlng)\(timezone)\(parameters)\(getCurrentWeather)\(tempUnit+inDegree)")
         else{
             print(#function, "Unable to convert string to URL")
             return
