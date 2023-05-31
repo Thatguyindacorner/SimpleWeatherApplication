@@ -72,27 +72,27 @@ struct ForecastView: View {
     
     @State var cardColor: Color = Color.white
     @State var backgroundGradient: LinearGradient = LinearGradient(
-        colors: [Color.yellow,Color.cyan, Color.blue],
+        colors: [Color.yellow, Color.cyan, Color.blue],
         startPoint: .topTrailing, endPoint: .bottomLeading)
     
         let sunriseGradient = LinearGradient(
-            colors: [Color.orange,Color.indigo, Color.black],
+            colors: [Color.orange, Color.indigo, Color.black],
             startPoint: .topTrailing, endPoint: .bottomLeading)
         
         let sunsetGradient = LinearGradient(
-            colors: [Color.yellow,Color.indigo, Color.black],
+            colors: [Color.orange, Color.indigo, Color.black],
             startPoint: .topLeading, endPoint: .bottomTrailing)
         
         let morningGradient = LinearGradient(
-            colors: [Color.yellow,Color.blue, Color.indigo],
+            colors: [Color.yellow, Color.blue, Color.indigo],
             startPoint: .topTrailing, endPoint: .bottomLeading)
         
         let afternoonGradient = LinearGradient(
-            colors: [Color.yellow,Color.cyan, Color.blue],
+            colors: [Color.yellow, Color.cyan, Color.blue],
             startPoint: .top, endPoint: .bottom)
         
         let eveningGradient = LinearGradient(
-            colors: [Color.yellow,Color.blue, Color.indigo],
+            colors: [Color.yellow, Color.blue, Color.indigo],
             startPoint: .topLeading, endPoint: .bottomTrailing)
         
         let nightGradient = LinearGradient(
@@ -174,6 +174,8 @@ struct ForecastView: View {
                             self.refreshAPI()
                         }){
                             Image(systemName: "arrow.clockwise")
+                                .foregroundColor(Color.white)
+                                .shadow(color: Color.black, radius: 5, x: 2, y: 2)
                         }
                     }
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -184,6 +186,8 @@ struct ForecastView: View {
                         }){
                             HStack{
                                 Text(usingUnit.symbol())
+                                    .foregroundColor(Color.white)
+                                    .shadow(color: Color.black, radius: 5, x: 2, y: 2)
                             }
                         }
                     }
