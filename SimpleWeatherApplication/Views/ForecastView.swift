@@ -75,26 +75,29 @@ struct ForecastView: View {
         colors: [Color.yellow,Color.cyan, Color.blue],
         startPoint: .topTrailing, endPoint: .bottomLeading)
     
-    let sunriseGradient = LinearGradient(
-        colors: [Color.orange,Color.indigo, Color.black],
-        startPoint: .topTrailing, endPoint: .bottomLeading)
-    let sunsetGradient = LinearGradient(
-        colors: [Color.yellow,Color.indigo, Color.black],
-        startPoint: .topLeading, endPoint: .bottomTrailing)
-    
-    let morningGradient = LinearGradient(
-        colors: [Color.yellow,Color.blue, Color.indigo],
-        startPoint: .topTrailing, endPoint: .bottomLeading)
-    let afternoonGradient = LinearGradient(
-        colors: [Color.yellow,Color.cyan, Color.blue],
-        startPoint: .top, endPoint: .bottom)
-    let eveningGradient = LinearGradient(
-        colors: [Color.yellow,Color.blue, Color.indigo],
-        startPoint: .topLeading, endPoint: .bottomTrailing)
-    
-    let nightGradient = LinearGradient(
-        colors: [Color.indigo, Color.black],
-        startPoint: .top, endPoint: .bottom)
+        let sunriseGradient = LinearGradient(
+            colors: [Color.orange,Color.indigo, Color.black],
+            startPoint: .topTrailing, endPoint: .bottomLeading)
+        
+        let sunsetGradient = LinearGradient(
+            colors: [Color.yellow,Color.indigo, Color.black],
+            startPoint: .topLeading, endPoint: .bottomTrailing)
+        
+        let morningGradient = LinearGradient(
+            colors: [Color.yellow,Color.blue, Color.indigo],
+            startPoint: .topTrailing, endPoint: .bottomLeading)
+        
+        let afternoonGradient = LinearGradient(
+            colors: [Color.yellow,Color.cyan, Color.blue],
+            startPoint: .top, endPoint: .bottom)
+        
+        let eveningGradient = LinearGradient(
+            colors: [Color.yellow,Color.blue, Color.indigo],
+            startPoint: .topLeading, endPoint: .bottomTrailing)
+        
+        let nightGradient = LinearGradient(
+            colors: [Color.indigo, Color.black],
+            startPoint: .top, endPoint: .bottom)
     
     var body: some View {
         
@@ -102,6 +105,9 @@ struct ForecastView: View {
             ZStack{
                 backgroundGradient.ignoresSafeArea()
                 VStack{
+                    
+                    //debug backgrounds
+                    
 //                    Picker("", selection: $timeSelected){
 //                        Text("Sunrise").tag(TimesOfDay.sunrise)
 //                        Text("Morning").tag(TimesOfDay.morining)
@@ -138,53 +144,50 @@ struct ForecastView: View {
                             }
                         }
                         else{
-                            Text("Error geting weather data, try connecting to the internet")
+                            VStack{
+                                Text("Error geting weather data, try connecting to the internet")
+                            }
+                            
                         }
                     }
                 }.padding(.top, 85)
-            }
+                
+            }.onAppear{self.refreshAPI()}
             
-            
-            .onAppear{
-                self.refreshAPI()
-            }
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    //Spacer()
-                    VStack{
-                        Spacer()
-                        //choosen city
-                        Text(cityOfForecast).font(.largeTitle).bold().foregroundColor(Color.white).shadow(color: Color.black, radius: 5, x: 2, y: 2)
-                        Text("\(api.fiveDayForcast.temperature?.asTemperature(unit: usingUnit) ?? "N/A")").font(.custom("temp", size: 65)).foregroundColor(Color.white).shadow(color: Color.black, radius: 5, x: 2, y: 2)
-                    }.padding(.top, 70)
-                    
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    //choosen city
-                    Button(action:{
-                        self.refreshAPI()
-                    }){
-                        Image(systemName: "arrow.clockwise")
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        VStack{
+                            Spacer()
+                            //choosen city
+                            Text(cityOfForecast).font(.largeTitle).bold().foregroundColor(Color.white).shadow(color: Color.black, radius: 5, x: 2, y: 2)
+                            Text("\(api.fiveDayForcast.temperature?.asTemperature(unit: usingUnit) ?? "N/A")")
+                            .font(.custom("temp", size: 65))
+                            .foregroundColor(Color.white)
+                            .shadow(color: Color.black, radius: 5, x: 2, y: 2)
+                        }.padding(.top, 70)
+                            .frame(width: UIScreen.main.bounds.width * 0.75)
                     }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    //choosen city
-                    Button(action:{
-                        usingUnit.toggle()
-                        self.refreshAPI()
-                    }){
-                        HStack{
-                            Text(UnitTemperature.celsius.symbol)
-                            Text("/")
-                            Text(UnitTemperature.fahrenheit.symbol)
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        //choosen city
+                        Button(action:{
+                            self.refreshAPI()
+                        }){
+                            Image(systemName: "arrow.clockwise")
                         }
                     }
-                }
-            }//.padding(.top, 5)
-            .navigationBarTitleDisplayMode(.inline)
-            //.toolbarBackground(cardColor, for: .navigationBar)
-            //.toolbarBackground(.hidden, for: .navigationBar)
-            
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        //choosen city
+                        Button(action:{
+                            usingUnit.toggle()
+                            self.refreshAPI()
+                        }){
+                            HStack{
+                                Text(usingUnit.symbol())
+                            }
+                        }
+                    }
+            }.navigationBarTitleDisplayMode(.inline)
         }
         
     }

@@ -20,15 +20,6 @@ extension String{
             }
         
         let expectedOutputFormat = date!.formatted(.dateTime.weekday(.wide).month().day(.defaultDigits))
-        //let dayOfWeek: String = date!.formatted(.dateTime.weekday())
-        //let today: String = Date.now.formatted(.dateTime.weekday())
-            
-//        if today == dayOfWeek{
-//            return "Today\n\(expectedOutputFormat)"
-//        }
-//        else{
-//            return dayOfWeek
-//        }
         
         return expectedOutputFormat
             
@@ -49,40 +40,37 @@ struct WeatherCardView: View {
         
         let cardGradient: EllipticalGradient = EllipticalGradient(colors: [Color.white, Color.clear], startRadiusFraction: 0.01, endRadiusFraction: 0.7)
         
-            VStack{
-                ZStack{
+        VStack{
+            ZStack{
+                
+                cardGradient.edgesIgnoringSafeArea(.vertical)
+                VStack{
+                    Text(fiveDayForecast.datesOfWeatherForcast![dayIndex].convertToDayOfWeek())
+                        .font(.title2)
+                        .bold()
+                        .foregroundColor(.black)
+
+                    Spacer()
                     
-                    cardGradient.edgesIgnoringSafeArea(.vertical)
-                    VStack{
-                        Text(fiveDayForecast.datesOfWeatherForcast![dayIndex].convertToDayOfWeek()).font(.title2).bold()
-                        Spacer()
-                        HStack(alignment: .center, spacing: 25){
-                            //Spacer()
+                    HStack(alignment: .center, spacing: 25){
+                        VStack(alignment: .leading){
                             
-                            VStack(alignment: .leading){
-                                
-                                Label("\(fiveDayForecast.highTemperatures![dayIndex].asTemperature(unit: unit))", systemImage: "thermometer.sun")
-                                Label("\(fiveDayForecast.lowTemperatures![dayIndex].asTemperature(unit: unit))", systemImage: "thermometer.snowflake")
-                                
-                            }
-                            //Spacer()
-                            
-                            VStack(alignment: .trailing){
-                                Label("\(fiveDayForecast.probabilitiesOfPercipitation![dayIndex].asPercent())", systemImage: "cloud.rain")
-                            }
-                            
-                            //Spacer()
+                            Label("\(fiveDayForecast.highTemperatures![dayIndex].asTemperature(unit: unit))", systemImage: "thermometer.sun")
+                                .foregroundColor(.black)
+                            Label("\(fiveDayForecast.lowTemperatures![dayIndex].asTemperature(unit: unit))", systemImage: "thermometer.snowflake")
+                                .foregroundColor(.black)
                         }
-                    }.padding(.vertical, 25)
-                    
-                }.onAppear{
-//                cardGradient = EllipticalGradient(colors: [darkestColor, Color.clear], startRadiusFraction: 0.04, endRadiusFraction: 0.55)
-                }
+                        
+                        VStack(alignment: .trailing){
+                            Label("\(fiveDayForecast.probabilitiesOfPercipitation![dayIndex].asPercent())", systemImage: "cloud.rain")
+                                .foregroundColor(.black)
+                        }
+                        
+                    }
+                }.padding(.vertical, 25)
+                
             }
-            .frame(width: UIScreen.main.bounds.width * 0.9, height: 115).cornerRadius(75)//.border(.black)
-        
-        
-        
+        }.frame(width: UIScreen.main.bounds.width * 0.9, height: 115).cornerRadius(75)
     }
 }
 
